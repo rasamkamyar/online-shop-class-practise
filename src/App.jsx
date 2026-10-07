@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { fetchData } from "./API";
+// import { BASE_URL, fetchData } from "./API";
 import UserCard from "./UserCard";
+import api, { getUsers } from "./config";
+import { useQuery } from "@tanstack/react-query";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -8,6 +10,33 @@ const App = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const searchInputRef = useRef(null);
+  // const {
+  //   data: items = [],
+  //   isError,
+  //   error,
+  //   isLoading,
+  // } = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: getUsers,
+  // });
+
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     setLoading(true);
+  //     setError(null);
+  //     try {
+  //       const res = await fetch(`${BASE_URL}`);
+  //       const data = await res.json();
+  //       setItems(data);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   };
+
+  //   loadData();
+  // }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -15,11 +44,10 @@ const App = () => {
       setError(null);
 
       try {
-        const data = await fetchData();
-        setItems(data);
+        const res = await api.get("/users");
+        setItems(res);
       } catch (error) {
-        setError(error.message);
-        console.error(error);
+        console.log(error.message);
       } finally {
         setLoading(false);
       }
@@ -36,13 +64,13 @@ const App = () => {
     );
     setSearchedValue(filteredData);
   };
-
+  const displayedData = searchedValue ?? items;
   return (
     <>
       <header>header</header>
 
       {loading && <span>loading...</span>}
-      {!loading && error && <span>{error}</span>}
+      {loading && error && <span>{error.message}</span>}
 
       <input
         ref={searchInputRef}
@@ -55,7 +83,7 @@ const App = () => {
 
       <h1>Online shop</h1>
 
-      {(searchedValue ?? items).map((item) => (
+      {displayedData?.map((item) => (
         <UserCard key={item.id} user={item} />
       ))}
 
