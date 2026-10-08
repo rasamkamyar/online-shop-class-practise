@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import "./App.css";
-import Details from "./Details";
 
 const UserCard = ({ user }) => {
   const { name, phone, email, address, company, id } = user;

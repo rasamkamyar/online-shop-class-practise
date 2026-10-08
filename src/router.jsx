@@ -8,7 +8,6 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // اضافه کردن errorElement برای دیباگ بهتر:
     errorElement: <div>یک خطای غیرمنتظره رخ داد!</div>,
     children: [
       {
