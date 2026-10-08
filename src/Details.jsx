@@ -1,27 +1,41 @@
-// داخل Details.jsx
 import React from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import api from "./config";
+import { getUsers } from "./config";
 
 function Details() {
-  const location = useLocation();
+  const { id } = useParams();
 
-  const user = location.state?.user;
+  const {
+    data: user,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["users", id],
+    queryFn: () => getUsers(id),
+  });
 
-  if (!user) {
-    return (
-      <div style={{ padding: "20px" }}>
-        <p>کاربری یافت نشد (اطلاعات در حافظه موجود نیست).</p>
-        <Link to="/">← بازگشت به صفحه اصلی</Link>
-      </div>
-    );
+  if (isLoading) {
+    return <div>در حال دریافت اطلاعات کاربر...</div>;
   }
-  const { name } = user;
+
+  if (isError) {
+    return <div>خطا در دریافت اطلاعات: {error.message}</div>;
+  }
+
+  const { name, email, phone, company, address } = user;
+  const { name: companyName } = company;
+  const { city } = address;
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <Link to="/">← بازگشت به صفحه اصلی</Link>
-      <h2>{name}</h2>
+
+      <h3>جزییات کاربر: {name}</h3>
+      <p>ایمیل: {email}</p>
+      <p>تلفن: {phone}</p>
+      <p>شرکت: {companyName}</p>
+      <p>شهر: {city}</p>
     </div>
   );
 }

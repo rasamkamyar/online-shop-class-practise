@@ -6,4 +6,4 @@ api.interceptors.response.use((res) => res.data);
 
 export default api;
 
-export const getUsers = () => api.get("/users");
+export const getUsers = (id = "") => api.get(`/users/${id}`);
