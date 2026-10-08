@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import "./App.css";
+import Details from "./Details";
 
 const UserCard = ({ user }) => {
-  const { name, phone, email, address, company } = user;
+  const { name, phone, email, address, company, id } = user;
   const { city, street, zipcode } = address;
   const { name: companyName } = company;
 
@@ -22,6 +24,9 @@ const UserCard = ({ user }) => {
         <p className="user-address">
           <strong>آدرس:</strong> {city}، {street} (کد پستی: {zipcode})
         </p>
+        <button>
+          <Link to={`/users/${id}`} state={{user}}  >مشاهده جزئیات</Link>
+        </button>
       </div>
     </div>
   );
